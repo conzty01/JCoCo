@@ -37,10 +37,11 @@ public class PyObjectAdapter implements PyObject {
 
         name = "PyObject()";
         type = PyType.PyTypeId.PyClassType;
+        
         PyObjectAdapter self = this;
         this.dict.put("__str__", new PyBaseCallable() {
             @Override
-            public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
+            public PyObject __call__(ArrayList<PyObject> args) {
                 if (args.size() != 0) {
                     throw new PyException(ExceptionType.PYWRONGARGCOUNTEXCEPTION,
                             "TypeError: expected 0 argument, got " + args.size());
@@ -52,7 +53,7 @@ public class PyObjectAdapter implements PyObject {
 
         this.dict.put("__hash__", new PyBaseCallable() {
             @Override
-            public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
+            public PyObject __call__(ArrayList<PyObject> args) {
                 throw new PyException(ExceptionType.PYILLEGALOPERATIONEXCEPTION,
                         "TypeError: unhashable type: '" + self.getType().str() + "'");
             }
@@ -60,19 +61,19 @@ public class PyObjectAdapter implements PyObject {
 
         this.dict.put("__repr__", new PyBaseCallable() {
             @Override
-            public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
+            public PyObject __call__(ArrayList<PyObject> args) {
                 if (args.size() != 0) {
                     throw new PyException(ExceptionType.PYWRONGARGCOUNTEXCEPTION,
                             "TypeError: expected 0 argument, got " + args.size());
                 }
 
-                return self.callMethod(callStack, "__str__", args);
+                return self.callMethod("__str__", args);
             }
         });
 
         this.dict.put("__iter__", new PyBaseCallable() {
             @Override
-            public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
+            public PyObject __call__(ArrayList<PyObject> args) {
                 if (args.size() != 0) {
                     throw new PyException(ExceptionType.PYWRONGARGCOUNTEXCEPTION,
                             "TypeError: expected 0 argument, got " + args.size());
@@ -85,7 +86,7 @@ public class PyObjectAdapter implements PyObject {
 
         this.dict.put("__type__", new PyBaseCallable() {
             @Override
-            public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
+            public PyObject __call__(ArrayList<PyObject> args) {
                 if (args.size() != 0) {
                     throw new PyException(ExceptionType.PYWRONGARGCOUNTEXCEPTION,
                             "TypeError: expected 0 argument, got " + args.size());
@@ -97,12 +98,12 @@ public class PyObjectAdapter implements PyObject {
     }
 
     @Override
-    public PyObject callMethod(PyCallStack callStack, String name, ArrayList<PyObject> args) {
+    public PyObject callMethod(String name, ArrayList<PyObject> args) {
         PyCallable mbr = null;
 
         if (this.dict.containsKey(name)) {
             mbr = (PyCallable) this.dict.get(name);
-            return mbr.__call__(callStack, args);
+            return mbr.__call__(args);
         }
 
         throw new PyException(ExceptionType.PYILLEGALOPERATIONEXCEPTION, "TypeError: '" + this.getType().str() + "' object has no attribute '" + name + "'");
@@ -120,12 +121,7 @@ public class PyObjectAdapter implements PyObject {
 
     @Override
     public String toString() {
-        // Creating a new call stack here is a trade-off. This simplifies
-        // the interface to the str() method, for instance. It only affects
-        // usage of the debugger. Exceptions will still have the full traceback
-        // but if the debugger is used, the call stack will stop at this call
-        // for calls to "__repr__" in this case.
-        PyStr s = (PyStr) callMethod(new PyCallStack(), "__repr__", new ArrayList<PyObject>());
+        PyStr s = (PyStr) callMethod("__repr__", new ArrayList<PyObject>());
         return s.str();
     }
 
@@ -155,12 +151,7 @@ public class PyObjectAdapter implements PyObject {
     public int hashCode() {
         ArrayList<PyObject> args = new ArrayList<PyObject>();
 
-        // Creating a new call stack here is a trade-off. This simplifies
-        // the interface to the str() method, for instance. It only affects
-        // usage of the debugger. Exceptions will still have the full traceback
-        // but if the debugger is used, the call stack will stop at this call
-        // for calls to "__hash__" in this case.
-        PyInt val = (PyInt) this.callMethod(new PyCallStack(), "__hash__", args);
+        PyInt val = (PyInt) this.callMethod("__hash__", args);
 
         return val.getVal();
     }
@@ -172,12 +163,8 @@ public class PyObjectAdapter implements PyObject {
         PyObject other = (PyObject) o;
 
         args.add(other);
-        // Creating a new call stack here is a trade-off. This simplifies
-        // the interface to the str() method, for instance. It only affects
-        // usage of the debugger. Exceptions will still have the full traceback
-        // but if the debugger is used, the call stack will stop at this call
-        // for calls to "__eq__" in this case.
-        PyBool bool = (PyBool) this.callMethod(new PyCallStack(), "__eq__", args);
+
+        PyBool bool = (PyBool) this.callMethod("__eq__", args);
 
         return bool.getVal();
     }

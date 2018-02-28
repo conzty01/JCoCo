@@ -1,0 +1,212 @@
+Class: Base
+BEGIN
+    Function: __init__/2
+    Constants: None, "Base __init__"
+    Locals: self, z
+    Globals: z, print
+    BEGIN
+              LOAD_FAST                      1
+              LOAD_FAST                      0
+              STORE_ATTR                     0
+              LOAD_GLOBAL                    1
+              LOAD_CONST                     1
+              CALL_FUNCTION                  1
+              POP_TOP                  
+              LOAD_CONST                     0
+              RETURN_VALUE             
+    END
+END
+Class: A(Base)
+BEGIN
+    Function: slope/1
+    Constants: None
+    Locals: self
+    Globals: x, y
+    BEGIN
+              LOAD_FAST                      0
+              LOAD_ATTR                      0
+              LOAD_FAST                      0
+              LOAD_ATTR                      1
+              BINARY_TRUE_DIVIDE       
+              RETURN_VALUE             
+    END
+    Function: __str__/1
+    Constants: None, "This is an A object"
+    Locals: self
+    BEGIN
+              LOAD_CONST                     1
+              RETURN_VALUE             
+    END
+    Function: getX/1
+    Constants: None
+    Locals: self
+    Globals: x
+    BEGIN
+              LOAD_FAST                      0
+              LOAD_ATTR                      0
+              RETURN_VALUE             
+    END
+    Function: __init__/3
+    Constants: None, 6
+    Locals: self, x, y, u
+    FreeVars: __class__
+    Globals: super, print, type, __init__, z, x, y
+    BEGIN
+              LOAD_GLOBAL                    0
+              CALL_FUNCTION                  0
+              STORE_FAST                     3
+              LOAD_GLOBAL                    1
+              LOAD_GLOBAL                    0
+              CALL_FUNCTION                  1
+              POP_TOP                  
+              LOAD_GLOBAL                    1
+              LOAD_FAST                      3
+              CALL_FUNCTION                  1
+              POP_TOP                  
+              LOAD_GLOBAL                    1
+              LOAD_GLOBAL                    2
+              LOAD_FAST                      3
+              CALL_FUNCTION                  1
+              CALL_FUNCTION                  1
+              POP_TOP                  
+              LOAD_GLOBAL                    0
+              CALL_FUNCTION                  0
+              LOAD_ATTR                      3
+              LOAD_CONST                     1
+              CALL_FUNCTION                  1
+              POP_TOP                  
+              LOAD_FAST                      1
+              LOAD_FAST                      0
+              LOAD_ATTR                      4
+              BINARY_ADD               
+              LOAD_FAST                      0
+              STORE_ATTR                     5
+              LOAD_FAST                      2
+              LOAD_FAST                      0
+              LOAD_ATTR                      4
+              BINARY_ADD               
+              LOAD_FAST                      0
+              STORE_ATTR                     6
+              LOAD_CONST                     0
+              RETURN_VALUE             
+    END
+END
+Function: main/0
+    Function: B/1
+        Function: __init__/2
+        Constants: None
+        Locals: self, x
+        FreeVars: y
+        Globals: x
+        BEGIN
+                  LOAD_DEREF                     0
+                  LOAD_FAST                      0
+                  STORE_ATTR                     0
+                  LOAD_CONST                     0
+                  RETURN_VALUE             
+        END
+        Function: getX/1
+        Constants: None
+        Locals: self
+        Globals: x
+        BEGIN
+                  LOAD_FAST                      0
+                  LOAD_ATTR                      0
+                  RETURN_VALUE             
+        END
+    Constants: 10, code(__init__), code(getX), None
+    Locals: __locals__
+    FreeVars: y
+    Globals: __name__, __module__, z, __init__, getX
+    BEGIN
+              LOAD_FAST                      0
+              STORE_LOCALS             
+              LOAD_NAME                      0
+              STORE_NAME                     1
+              LOAD_CONST                     0
+              STORE_NAME                     2
+              LOAD_CLOSURE                   0
+              BUILD_TUPLE                    1
+              LOAD_CONST                     1
+              MAKE_CLOSURE                   0
+              STORE_NAME                     3
+              LOAD_CONST                     2
+              MAKE_FUNCTION                  0
+              STORE_NAME                     4
+              LOAD_CONST                     3
+              RETURN_VALUE             
+    END
+Constants: None, 6, code(B), "B", 5, 3
+Locals: B, a, b, slope, bx, bx2, slope2
+CellVars: y
+Globals: A, print, type, slope, getX
+BEGIN
+          LOAD_CONST                     1
+          STORE_DEREF                    0
+          LOAD_BUILD_CLASS         
+          LOAD_CLOSURE                   0
+          BUILD_TUPLE                    1
+          LOAD_CONST                     2
+          MAKE_CLOSURE                   0
+          LOAD_CONST                     3
+          CALL_FUNCTION                  2
+          STORE_FAST                     0
+          LOAD_GLOBAL                    0
+          LOAD_CONST                     4
+          LOAD_CONST                     5
+          CALL_FUNCTION                  2
+          STORE_FAST                     1
+          LOAD_FAST                      0
+          LOAD_CONST                     4
+          CALL_FUNCTION                  1
+          STORE_FAST                     2
+          LOAD_GLOBAL                    1
+          LOAD_FAST                      1
+          CALL_FUNCTION                  1
+          POP_TOP                  
+          LOAD_GLOBAL                    1
+          LOAD_GLOBAL                    2
+          LOAD_FAST                      1
+          CALL_FUNCTION                  1
+          CALL_FUNCTION                  1
+          POP_TOP                  
+          LOAD_GLOBAL                    1
+          LOAD_GLOBAL                    2
+          LOAD_GLOBAL                    0
+          CALL_FUNCTION                  1
+          CALL_FUNCTION                  1
+          POP_TOP                  
+          LOAD_GLOBAL                    1
+          LOAD_GLOBAL                    2
+          LOAD_CONST                     1
+          CALL_FUNCTION                  1
+          CALL_FUNCTION                  1
+          POP_TOP                  
+          LOAD_FAST                      1
+          LOAD_ATTR                      3
+          CALL_FUNCTION                  0
+          STORE_FAST                     3
+          LOAD_FAST                      2
+          LOAD_ATTR                      4
+          CALL_FUNCTION                  0
+          STORE_FAST                     4
+          LOAD_FAST                      0
+          LOAD_ATTR                      4
+          LOAD_FAST                      2
+          CALL_FUNCTION                  1
+          STORE_FAST                     5
+          LOAD_GLOBAL                    0
+          LOAD_ATTR                      3
+          LOAD_FAST                      1
+          CALL_FUNCTION                  1
+          STORE_FAST                     6
+          LOAD_GLOBAL                    1
+          LOAD_FAST                      3
+          LOAD_FAST                      6
+          LOAD_FAST                      4
+          LOAD_FAST                      5
+          CALL_FUNCTION                  4
+          POP_TOP                  
+          LOAD_CONST                     0
+          RETURN_VALUE             
+END

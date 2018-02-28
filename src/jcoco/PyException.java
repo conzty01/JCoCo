@@ -104,7 +104,7 @@ public class PyException extends RuntimeException implements PyObject {
         this(ExceptionType.valueOf(typeCode), msg);
     }
 
-    public String getMessage(PyCallStack callStack) {
+    public String getMessage() {
         return this.val.str();
     }
 
@@ -117,16 +117,7 @@ public class PyException extends RuntimeException implements PyObject {
     }
 
     public void printTraceBack() {
-        for (int k = traceback.size()-1;k>=0;k--) {
-            System.err.println("=========> PC=" + (traceback.get(k).getPC()) + " in this function. ");
-            if (traceback.get(k).getCode().getType().typeId() == PyType.PyTypeId.PyCodeType) {
-                try {
-                    System.err.println(traceback.get(k).getCode().prettyString("", true));
-                } catch (PyException e) {
-                    System.err.println("Unable to print traceback : " + e.getMessage());
-                }
-            }
-        }
+        JCoCo.printCallStack(traceback);
     }
 
     public PyObject getTraceBack() {
@@ -145,14 +136,14 @@ public class PyException extends RuntimeException implements PyObject {
     }
 
     @Override
-    public PyObject callMethod(PyCallStack callStack, String name, ArrayList<PyObject> args) {
+    public PyObject callMethod(String name, ArrayList<PyObject> args) {
         if (!this.dict.containsKey(name)) {
             throw new PyException(ExceptionType.PYILLEGALOPERATIONEXCEPTION, "TypeError: '" + this.getType().str() + "' object has no attribute '" + name + "'");
         }
 
         PyCallable mbr = (PyCallable) this.dict.get(name);
 
-        return mbr.__call__(callStack, args);
+        return mbr.__call__(args);
     }
 
     public static HashMap<String, PyCallable> funs() {
@@ -160,7 +151,7 @@ public class PyException extends RuntimeException implements PyObject {
 
         funs.put("__str__", new PyCallableAdapter() {
             @Override
-            public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
+            public PyObject __call__(ArrayList<PyObject> args) {
                 if (args.size() != 1) {
                     throw new PyException(ExceptionType.PYWRONGARGCOUNTEXCEPTION,
                             "TypeError: expected 1 argument, got " + args.size());
@@ -174,7 +165,7 @@ public class PyException extends RuntimeException implements PyObject {
 
         funs.put("__hash__", new PyCallableAdapter() {
             @Override
-            public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
+            public PyObject __call__(ArrayList<PyObject> args) {
                 PyException self = (PyException) args.get(args.size() - 1);
 
                 throw new PyException(ExceptionType.PYILLEGALOPERATIONEXCEPTION,
@@ -184,20 +175,20 @@ public class PyException extends RuntimeException implements PyObject {
 
         funs.put("__repr__", new PyCallableAdapter() {
             @Override
-            public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
+            public PyObject __call__(ArrayList<PyObject> args) {
                 if (args.size() != 1) {
                     throw new PyException(ExceptionType.PYWRONGARGCOUNTEXCEPTION,
                             "TypeError: expected 1 argument, got " + args.size());
                 }
                 PyException self = (PyException) args.get(args.size() - 1);
 
-                return self.callMethod(callStack,"__str__", newargs());
+                return self.callMethod("__str__", newargs());
             }
         });
 
         funs.put("__type__", new PyCallableAdapter() {
             @Override
-            public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
+            public PyObject __call__(ArrayList<PyObject> args) {
                 if (args.size() != 1) {
                     throw new PyException(ExceptionType.PYWRONGARGCOUNTEXCEPTION,
                             "TypeError: expected 1 argument, got " + args.size());
@@ -211,7 +202,7 @@ public class PyException extends RuntimeException implements PyObject {
 
         funs.put("__excmatch", new PyCallableAdapter() {
             @Override
-            public PyObject __call__(PyCallStack callStack, ArrayList<PyObject> args) {
+            public PyObject __call__(ArrayList<PyObject> args) {
                 if (args.size() != 2) {
                     throw new PyException(ExceptionType.PYWRONGARGCOUNTEXCEPTION,
                             "TypeError: expected 2 arguments, got " + args.size());
@@ -248,4 +239,5 @@ public class PyException extends RuntimeException implements PyObject {
             this.dict.put(key, new PyMethod(key, this, funs.get(key)));
         }
     }
+
 }
