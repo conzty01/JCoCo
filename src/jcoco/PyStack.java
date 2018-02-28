@@ -57,45 +57,7 @@ public class PyStack<T> {
         boolean debugging = JCoCo.stepOverInstructions;
         JCoCo.stepOverInstructions = false;
 
-<<<<<<< HEAD
-        StringBuffer out = new StringBuffer();
-
-        out.append("top\n---\n");
-
-        __PyStackElement<T> cursor;
-
-        cursor = this.tos;
-
-        while (cursor != null) {
-            try {
-                out.append(cursor.object + "\n");
-            } catch (PyException ex) {
-                try {
-                    out.append(((PyObject) cursor.object).str() + "\n");
-                } catch (PyException ex2) {
-                    out.append("<" + ((PyObject) cursor.object).getType() + " object at 0x" + Integer.toHexString(System.identityHashCode(this)) + ">\n");
-                }
-            }
-            cursor = cursor.next;
-        }
-
-        out.append("---\n");
-
-        // restore step over debugging if active.
-        JCoCo.stepOverInstructions = debugging;
-
-        return out.toString();
-    }
-
-    // This is used only by debugging to leave out marker objects when looking at the 
-    // operand stack. This is specific to JCoCo.
-    public String toStringNoMarkers() {
-        // temporarily turn off stepping if it is on.
-        boolean debugging = JCoCo.stepOverInstructions;
-        JCoCo.stepOverInstructions = false;
-=======
         int callStackSize = JCoCo.callStack.size();
->>>>>>> f920781a116549800e541724185c0e095fe2effe
 
         StringBuffer out = new StringBuffer();
 
@@ -106,19 +68,6 @@ public class PyStack<T> {
         cursor = this.tos;
 
         while (cursor != null) {
-<<<<<<< HEAD
-            if (!cursor.object.toString().equals("Marker")) {
-                try {
-                    out.append(cursor.object + "\n");
-                } catch (PyException ex) {
-                    try {
-                        out.append(((PyObject) cursor.object).str() + "\n");
-                    } catch (PyException ex2) {
-                        out.append("<" + ((PyObject) cursor.object).getType() + " object at 0x" + Integer.toHexString(System.identityHashCode(this)) + ">\n");
-                    }
-                }
-            }
-=======
 
             try {
                 out.append(cursor.object + "\n");
@@ -130,7 +79,6 @@ public class PyStack<T> {
                 }
             }
 
->>>>>>> f920781a116549800e541724185c0e095fe2effe
             cursor = cursor.next;
         }
 
@@ -139,20 +87,14 @@ public class PyStack<T> {
         // restore step over debugging if active.
         JCoCo.stepOverInstructions = debugging;
 
-<<<<<<< HEAD
-=======
         while (JCoCo.callStack.size() > callStackSize) {
             JCoCo.callStack.pop(); // restore call stack after debugging.
         }
 
->>>>>>> f920781a116549800e541724185c0e095fe2effe
         return out.toString();
 
     }
 
-<<<<<<< HEAD
-    public int getCount() {
-=======
     // This is used only by debugging to leave out marker objects when looking at the 
     // operand stack. This is specific to JCoCo.
     public String toStringNoMarkers() {
@@ -198,7 +140,6 @@ public class PyStack<T> {
     }
 
     public int size() {
->>>>>>> f920781a116549800e541724185c0e095fe2effe
         return this.count;
     }
 
