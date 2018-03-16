@@ -322,6 +322,13 @@ class PyFrame extends PyObjectAdapter {
                     case COMPARE_OP:
                         v = this.safetyPop();
                         u = this.safetyPop();
+                        if (operand >= 6 && operand < 10) {
+                            //for these comparisons the method should be called on the 
+                            //second argument (TOS), not the first (TOS1)
+                            PyObject tmp = u;
+                            u = v;
+                            v = tmp;
+                        }
                         args = new ArrayList<PyObject>();
                         args.add(v);
 
@@ -408,6 +415,14 @@ class PyFrame extends PyObjectAdapter {
 
                         this.opStack.push(w);
                         break;
+                    case BINARY_AND:
+                        v = this.safetyPop();
+                        u = this.safetyPop();
+                        args = new ArrayList<PyObject>();
+                        args.add(u);
+                        w = v.callMethod("__and__", args);
+                        this.opStack.push(w);
+                        break;
                     case BINARY_SUBTRACT:
                         v = this.safetyPop();
                         u = this.safetyPop();
@@ -454,6 +469,14 @@ class PyFrame extends PyObjectAdapter {
                         args = new ArrayList<PyObject>();
                         args.add(v);
                         w = u.callMethod("__pow__", args);
+                        this.opStack.push(w);
+                        break;
+                    case BINARY_OR:
+                        v = this.safetyPop();
+                        u = this.safetyPop();
+                        args = new ArrayList<PyObject>();
+                        args.add(u);
+                        w = v.callMethod("__or__", args);
                         this.opStack.push(w);
                         break;
                     case GET_ITER:
@@ -620,6 +643,22 @@ class PyFrame extends PyObjectAdapter {
 
                         this.opStack.push(new PyList(args));
                         break;
+                    case BUILD_MAP:
+                        this.opStack.push(new PyDict());
+                        break;
+                    case STORE_MAP:
+                        args = new ArrayList<PyObject>();
+                        for (i = 0; i < operand; i++) {
+                            u = this.safetyPop();
+                            args.add(0, u);
+                        }
+                        z = this.safetyPop();     // dictionary
+                        args.add(z);
+
+                        z.callMethod("__setitem__", args);
+
+                        this.opStack.push(z);
+                        break;                        
                     case MAKE_CLOSURE:
                         u = this.safetyPop();
                         v = this.safetyPop();

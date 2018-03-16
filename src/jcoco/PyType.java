@@ -40,6 +40,8 @@ public class PyType extends PyCallableAdapter {
         PyRangeIteratorType,
         PyListType,
         PyListIteratorType,
+        PyFrozenSetType,
+        PyFrozenSetIteratorType,
         PyFunListType,
         PyFunListIteratorType,
         PyStrIteratorType,
