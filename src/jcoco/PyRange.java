@@ -13,6 +13,7 @@ package jcoco;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class PyRange extends PyPrimitiveTypeAdapter {
 
@@ -116,6 +117,26 @@ public class PyRange extends PyPrimitiveTypeAdapter {
                 }
 
                 return new PyList(largs);
+            }
+        });
+        
+        funs.put("__frozenset__", new PyCallableAdapter() {
+            @Override
+            public PyObject __call__(ArrayList<PyObject> args) {
+                if (args.size() != 1) {
+                    throw new PyException(PyException.ExceptionType.PYWRONGARGCOUNTEXCEPTION,
+                            "TypeError: expected 1 argument, got " + args.size());
+                }
+                PyRange self = (PyRange) args.get(args.size() - 1);
+                HashSet<PyObject> d = new HashSet();
+                HashSet<PyObject> largs = new HashSet<PyObject>();
+                int k;
+                
+                for (k = self.start; k < self.stop; k = k + self.increment) {
+                    largs.add(new PyInt(k));
+                }
+
+                return new PyFrozenSet(largs);
             }
         });
 
